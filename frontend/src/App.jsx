@@ -350,7 +350,7 @@ export default function App() {
             <p className="powered-by">Powered by SkillProof</p>
           </div>
         </header>
-        <main>
+        <main key="branded-welcome" className="page-enter">
           <h2>{tradeName} Assessment</h2>
           <p className="subtitle">Complete your {tradeName.toLowerCase()} skills assessment for {brandedOrg.name}.</p>
           <form onSubmit={handleRegister}>
@@ -371,26 +371,35 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1></header>
-        <main>
-          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
-            <h2 style={{ fontSize: '22px', lineHeight: 1.3 }}>Trade Certification<br/>in Minutes, Not Weeks</h2>
-            <p className="subtitle" style={{ marginBottom: '24px' }}>
+        <main key="welcome" className="page-enter">
+          <div className="welcome-hero">
+            <h2>Trade Certification<br/>in Minutes, Not Weeks</h2>
+            <p className="subtitle">
               AI-powered skill assessment for construction professionals
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '0 0 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <span style={{ fontSize: '24px' }}>📹</span>
-              <div><strong>Upload</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Worker records a short video of their work</span></div>
+          <div className="features">
+            <div className="feature-item">
+              <span className="feature-num">1</span>
+              <div className="feature-text">
+                <strong>Upload</strong>
+                <span>Worker records a short video of their work</span>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <span style={{ fontSize: '24px' }}>🤖</span>
-              <div><strong>AI Assesses</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Evaluated against BS 5385 &amp; NVQ Level 2 standards in 30 seconds</span></div>
+            <div className="feature-item">
+              <span className="feature-num">2</span>
+              <div className="feature-text">
+                <strong>AI Assesses</strong>
+                <span>Evaluated against BS 5385 &amp; NVQ Level 2 standards in 30 seconds</span>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-              <span style={{ fontSize: '24px' }}>📜</span>
-              <div><strong>Get Certified</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Verifiable digital certificate with QR code</span></div>
+            <div className="feature-item">
+              <span className="feature-num">3</span>
+              <div className="feature-text">
+                <strong>Get Certified</strong>
+                <span>Verifiable digital certificate with QR code</span>
+              </div>
             </div>
           </div>
 
@@ -401,8 +410,7 @@ export default function App() {
             I'm a Worker &mdash; Start Assessment
           </button>
           <button
-            className="btn-secondary"
-            style={{ marginTop: '10px' }}
+            className="btn-secondary btn-gap"
             onClick={async () => {
               setLoading(true)
               setErr(null)
@@ -433,7 +441,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1></header>
-        <main>
+        <main key="worker-register" className="page-enter">
           <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back</button>
           <h2>Get Started</h2>
           <p className="subtitle">Enter your details to begin the assessment.</p>
@@ -455,7 +463,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1><p className="header-sub">Business Setup</p></header>
-        <main>
+        <main key="org-setup" className="page-enter">
           <button className="btn-back" onClick={() => setStep('welcome')}>
             &larr; Back
           </button>
@@ -493,7 +501,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1><p className="header-sub">{org.name}</p></header>
-        <main>
+        <main key="org-dashboard" className="page-enter">
           <h2>Your Assessments</h2>
           <p className="subtitle">Customise templates and share assessment links with candidates.</p>
 
@@ -518,7 +526,7 @@ export default function App() {
                       setTimeout(() => setCopiedTrade(null), 2000)
                     }}
                   >
-                    {copiedTrade === t.key ? '✓ Copied!' : 'Copy Link'}
+                    {copiedTrade === t.key ? 'Copied' : 'Copy Link'}
                   </button>
                 </div>
                 <p className="assess-link">{assessLink(t.key)}</p>
@@ -536,7 +544,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1><p className="header-sub">{org.name} — Rubric Editor</p></header>
-        <main>
+        <main key="rubric-editor" className="page-enter">
           <button className="btn-back" onClick={() => setStep('org-dashboard')}>
             &larr; Back to dashboard
           </button>
@@ -604,7 +612,7 @@ export default function App() {
             </div>
           ))}
 
-          <button className="btn-secondary" onClick={addTask} style={{ marginBottom: '1rem' }}>
+          <button className="btn-secondary btn-add-task" onClick={addTask}>
             + Add Task
           </button>
 
@@ -622,7 +630,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>SkillProof</h1></header>
-        <main>
+        <main key="trades" className="page-enter">
           <h2>Select Your Trade</h2>
           <div className="trade-cards">
             {trades.map(t => (
@@ -662,7 +670,7 @@ export default function App() {
             <h1>SkillProof</h1>
           )}
         </header>
-        <main>
+        <main key="dashboard" className="page-enter">
           <h2>{tradeName}</h2>
           <div className="progress-bar">
             <div
@@ -672,14 +680,17 @@ export default function App() {
           </div>
           <p className="progress-text">{done} / {total} tasks passed</p>
           {done > 0 && (
-            <p className="total-score">
-              Average Score: {(
-                tasks
-                  .filter(t => results[t.id]?.passed)
-                  .reduce((sum, t) => sum + results[t.id].weighted_total, 0) /
-                done
-              ).toFixed(1)}%
-            </p>
+            <>
+              <p className="total-score">
+                {(
+                  tasks
+                    .filter(t => results[t.id]?.passed)
+                    .reduce((sum, t) => sum + results[t.id].weighted_total, 0) /
+                  done
+                ).toFixed(1)}%
+              </p>
+              <p className="total-score-label">Average Score</p>
+            </>
           )}
 
           <div className="task-list">
@@ -751,7 +762,7 @@ export default function App() {
             <h1>SkillProof</h1>
           )}
         </header>
-        <main>
+        <main key="task" className="page-enter">
           <button className="btn-back" onClick={() => setStep('dashboard')}>
             &larr; Back to tasks
           </button>
@@ -766,7 +777,12 @@ export default function App() {
 
           <form onSubmit={handleUpload}>
             <label className="file-label">
-              Tap to select photo or video
+              <svg className="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Select photo or video
               <input type="file" name="file" accept="image/*,video/*" required />
             </label>
             <button type="submit" className="btn-primary" disabled={loading}>
@@ -794,28 +810,31 @@ export default function App() {
   if (step === 'processing') {
     const task = tasks[taskIdx]
     const stages = [
-      { icon: '📤', text: 'Uploading video...' },
-      { icon: '👁️', text: 'AI is watching your video...' },
-      { icon: '📋', text: 'Checking against BS 5385 standards...' },
-      { icon: '✍️', text: 'Generating detailed feedback...' },
+      'Uploading video',
+      'AI analyzing your work',
+      'Checking against standards',
+      'Generating feedback',
     ]
     return (
       <div className="app">
         <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
-        <main>
+        <main key="processing" className="page-enter">
           <h2>Assessing: {task.title}</h2>
           <div className="processing">
-            <div className="spinner" />
-            <p style={{ fontSize: '24px', marginBottom: '8px' }}>{stages[procStage].icon}</p>
-            <p style={{ fontWeight: 600 }}>{stages[procStage].text}</p>
-            <div style={{ marginTop: '16px' }}>
+            <div className="spinner">
+              <div className="spinner-dot"></div>
+              <div className="spinner-dot"></div>
+              <div className="spinner-dot"></div>
+            </div>
+            <p className="processing-title">{stages[procStage]}</p>
+            <div className="stage-list">
               {stages.map((s, i) => (
-                <p key={i} style={{ fontSize: '13px', color: i <= procStage ? '#333' : '#ccc', marginBottom: '4px' }}>
-                  {i < procStage ? '✓' : i === procStage ? '●' : '○'} {s.text}
+                <p key={i} className={`stage-item ${i < procStage ? 'done' : i === procStage ? 'active' : 'pending'}`}>
+                  <span className="stage-check">{i < procStage ? '\u2713' : i === procStage ? '\u25CF' : '\u25CB'}</span> {s}
                 </p>
               ))}
             </div>
-            <p className="processing-note" style={{ marginTop: '16px' }}>Usually takes 20-60 seconds</p>
+            <p className="processing-note">Usually takes 20-60 seconds</p>
           </div>
           {err && <p className="error">{err}</p>}
         </main>
@@ -829,7 +848,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
-        <main>
+        <main key="result" className="page-enter">
           <div className={`result-banner ${r.passed ? 'pass' : 'fail'}`}>
             <h2>{r.passed ? 'PASSED' : 'FAILED'}</h2>
             <p className="result-score">{r.weighted_total}%</p>
@@ -904,7 +923,7 @@ export default function App() {
                           <div className="narration-steps">
                             {cv.narration_steps.map((ns, ni) => (
                               <p key={ni} className="narration-step">
-                                <span className="step-num">●</span> {ns}
+                                <span className="step-num">&#x25CF;</span> {ns}
                               </p>
                             ))}
                           </div>
@@ -956,7 +975,7 @@ export default function App() {
     return (
       <div className="app">
         <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
-        <main>
+        <main key="certificate" className="page-enter">
           <h2>Certificate Issued</h2>
           <div className="cert-card">
             {cert.org_name && <p className="cert-org">{cert.org_name}</p>}
@@ -975,7 +994,7 @@ export default function App() {
               Issued: {new Date(cert.issued_at).toLocaleDateString()}
             </p>
             {cert.org_name && (
-              <p className="cert-verified">✓ Verified by SkillProof</p>
+              <p className="cert-verified">Verified by SkillProof</p>
             )}
           </div>
           <a
