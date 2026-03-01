@@ -504,7 +504,7 @@ export default function App() {
   if (step === 'worker-register') {
     return (
       <div className="app">
-        <header><h1>SkillProof</h1></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')} style={{cursor:'pointer'}}>SkillProof</h1></header>
         <main key="worker-register" className="page-enter">
           <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back</button>
           <h2>Get Started</h2>
@@ -566,6 +566,7 @@ export default function App() {
       <div className="app">
         <header><h1>SkillProof</h1><p className="header-sub">{org.name}</p></header>
         <main key="org-dashboard" className="page-enter">
+          <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back to home</button>
           <h2>Your Assessments</h2>
           <p className="subtitle">Customise templates and share assessment links with candidates.</p>
 
@@ -695,7 +696,7 @@ export default function App() {
   if (step === 'trades') {
     return (
       <div className="app">
-        <header><h1>SkillProof</h1></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')} style={{cursor:'pointer'}}>SkillProof</h1></header>
         <main key="trades" className="page-enter">
           <h2>Select Your Trade</h2>
           <div className="trade-cards">
