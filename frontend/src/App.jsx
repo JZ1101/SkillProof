@@ -40,6 +40,14 @@ export default function App() {
   const [genLoading, setGenLoading] = useState(false)
   const [procStage, setProcStage] = useState(0)
   const [filePreview, setFilePreview] = useState(null)
+  const [bgVideoIdx, setBgVideoIdx] = useState(0)
+  const bgVideos = [
+    '/corrections/prebaked/tiling_trowel_technique.mp4',
+    '/corrections/prebaked/tiling_backbutter.mp4',
+    '/corrections/prebaked/tiling_grouting.mp4',
+    '/corrections/prebaked/tiling_cutting.mp4',
+    '/corrections/prebaked/tiling_levelling.mp4',
+  ]
   const [howVisible, setHowVisible] = useState(false)
   const stepsRef = useRef(null)
 
@@ -99,6 +107,15 @@ export default function App() {
     observer.observe(node)
     return () => observer.disconnect()
   }, [step, brandedOrg])
+
+  // Cycle background videos on landing
+  useEffect(() => {
+    if (step !== 'welcome') return
+    const timer = setInterval(() => {
+      setBgVideoIdx(prev => (prev + 1) % bgVideos.length)
+    }, 6000)
+    return () => clearInterval(timer)
+  }, [step])
 
   // Check URL for branded assessment link: ?org=slug&trade=tiling
   useEffect(() => {
@@ -436,6 +453,20 @@ export default function App() {
         </header>
 
         <section className="hero">
+          <div className="hero-video-bg">
+            {bgVideos.map((src, i) => (
+              <video
+                key={src}
+                src={src}
+                className={`hero-video ${i === bgVideoIdx ? 'active' : ''}`}
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ))}
+            <div className="hero-video-overlay" />
+          </div>
           <div className="hero-glow" />
           <h2 className="hero-headline">
             Trade Certification<br />in Minutes, Not Weeks
