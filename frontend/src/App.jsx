@@ -961,14 +961,9 @@ export default function App() {
                 <p>{task.instruction}</p>
               </div>
               {canSkip && (
-                <div className="skip-options">
-                  <button className="btn-skip" onClick={() => handleSkip(40)}>
-                    Skip (40%)
-                  </button>
-                  <button className="btn-skip high" onClick={() => handleSkip(80)}>
-                    Skip (80%)
-                  </button>
-                </div>
+                <button className="btn-skip-simple" onClick={() => handleSkip(0)}>
+                  Skip this task
+                </button>
               )}
             </div>
             <div>

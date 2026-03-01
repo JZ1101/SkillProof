@@ -915,3 +915,19 @@ input:focus {
   color: #6B7280;
   padding: 4px 0;
 }
+
+/* Simple skip button */
+.btn-skip-simple {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background: #F3F4F6;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-skip-simple:hover { background: #E5E7EB; color: #4B5563; }
