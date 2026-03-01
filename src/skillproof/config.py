@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     gemini_api_key: str
     gemini_model: str = "gemini-3.1-pro-preview"
     runware_api_key: str = ""
+    fal_key: str = ""
     upload_dir: str = "uploads"
     cert_dir: str = "certificates"
     database_url: str = "sqlite:///skillproof.db"
