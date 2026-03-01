@@ -944,3 +944,12 @@ input:focus {
   color: #6B7280;
   margin-bottom: 8px;
 }
+
+/* Correction button pair */
+.correction-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.correction-buttons .btn-generate { flex: 1; }
+.correction-buttons .btn-secondary { flex: 0 0 auto; font-size: 13px; }
