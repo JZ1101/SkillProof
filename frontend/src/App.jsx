@@ -1170,6 +1170,15 @@ export default function App() {
               {cert.org_name && (
                 <p className="cert-verified">Verified by SkillProof</p>
               )}
+
+              {tasks.some(t => skipped.has(t.id)) && (
+                <div className="cert-skipped">
+                  <p className="cert-skipped-title">Skipped Tasks</p>
+                  {tasks.filter(t => skipped.has(t.id)).map(t => (
+                    <span key={t.id} className="cert-skipped-badge">{t.id}: {t.title} — Proof not provided</span>
+                  ))}
+                </div>
+              )}
             </div>
             <a
               href={`${BACKEND}/${cert.pdf_path}`}

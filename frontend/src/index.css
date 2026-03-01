@@ -894,3 +894,24 @@ input:focus {
   font-weight: 500;
 }
 .proof-link:hover { text-decoration: underline; }
+
+/* Skipped tasks on certificate */
+.cert-skipped {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #E5E7EB;
+}
+.cert-skipped-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9CA3AF;
+  margin-bottom: 8px;
+}
+.cert-skipped-badge {
+  display: block;
+  font-size: 13px;
+  color: #6B7280;
+  padding: 4px 0;
+}
