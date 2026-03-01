@@ -384,7 +384,7 @@ export default function App() {
         <header>
           <div className="branded-header">
             {brandedOrg.logo_url && <img src={brandedOrg.logo_url} alt="" className="org-logo" />}
-            <h1>{brandedOrg.name}</h1>
+            <h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg.name}</h1>
             <p className="powered-by">Powered by SkillProof</p>
           </div>
         </header>
@@ -410,7 +410,7 @@ export default function App() {
       <div className="app landing">
         <header>
           <div className="header-inner">
-            <h1>SkillProof</h1>
+            <h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1>
             <button
               className="header-link"
               onClick={async () => {
@@ -732,11 +732,11 @@ export default function App() {
           {brandedOrg ? (
             <div className="branded-header">
               {brandedOrg.logo_url && <img src={brandedOrg.logo_url} alt="" className="org-logo" />}
-              <h1>{brandedOrg.name}</h1>
+              <h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg.name}</h1>
               <p className="powered-by">Powered by SkillProof</p>
             </div>
           ) : (
-            <h1>SkillProof</h1>
+            <h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1>
           )}
         </header>
         <main key="dashboard" className="page-enter">
@@ -829,11 +829,11 @@ export default function App() {
         <header>
           {brandedOrg ? (
             <div className="branded-header">
-              <h1>{brandedOrg.name}</h1>
+              <h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg.name}</h1>
               <p className="powered-by">Powered by SkillProof</p>
             </div>
           ) : (
-            <h1>SkillProof</h1>
+            <h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1>
           )}
         </header>
         <main key="task" className="page-enter">
