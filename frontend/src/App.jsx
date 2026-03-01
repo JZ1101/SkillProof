@@ -1073,6 +1073,15 @@ export default function App() {
               {r.feedback && <p className="feedback">{r.feedback}</p>}
               {r.fail_reason && <p className="fail-reason">{r.fail_reason}</p>}
 
+              {r.file_path && (
+                <div className="submission-video">
+                  <p className="submission-video-label">Your Submission</p>
+                  <video controls width="100%" playsInline style={{borderRadius: '8px'}}>
+                    <source src={`${BACKEND}/${r.file_path}`} type="video/mp4" />
+                  </video>
+                </div>
+              )}
+
               {r.corrections && r.corrections.length > 0 && (
                 <div className="corrections">
                   <h3>Issues Found ({r.corrections.length})</h3>

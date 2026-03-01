@@ -139,6 +139,7 @@ def assess_task(
     return {
         "task_result_id": task_result.id,
         "task_id": task_id,
+        "file_path": file_path,
         **result,
         "assessment": assessment,
         "corrections": corrections,

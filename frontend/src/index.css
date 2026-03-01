@@ -931,3 +931,16 @@ input:focus {
   transition: all 0.15s ease;
 }
 .btn-skip-simple:hover { background: #E5E7EB; color: #4B5563; }
+
+/* Submission video in results */
+.submission-video {
+  margin-bottom: 20px;
+}
+.submission-video-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
