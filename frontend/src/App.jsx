@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   fetchTrades,
   fetchTasks,
@@ -39,6 +39,8 @@ export default function App() {
   const [correctionVideos, setCorrectionVideos] = useState(null)
   const [genLoading, setGenLoading] = useState(false)
   const [procStage, setProcStage] = useState(0)
+  const [howVisible, setHowVisible] = useState(false)
+  const stepsRef = useRef(null)
 
   // B2B state
   const [org, setOrg] = useState(null)
@@ -81,6 +83,20 @@ export default function App() {
     }
     requestAnimationFrame(tick)
   }, [step, lastResult])
+
+  // Scroll-triggered animation for how-it-works cards
+  useEffect(() => {
+    if (step !== 'welcome' || brandedOrg) return
+    setHowVisible(false)
+    const node = stepsRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHowVisible(true) },
+      { threshold: 0.2 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [step, brandedOrg])
 
   // Check URL for branded assessment link: ?org=slug&trade=tiling
   useEffect(() => {
@@ -389,51 +405,12 @@ export default function App() {
   // ---- LANDING PAGE (main entry) ----
   if (step === 'welcome') {
     return (
-      <div className="app">
-        <header><h1>SkillProof</h1></header>
-        <main key="welcome" className="page-enter">
-          <div className="welcome-hero">
-            <h2>Trade Certification<br/>in Minutes, Not Weeks</h2>
-            <p className="subtitle">
-              AI-powered skill assessment for construction professionals
-            </p>
-          </div>
-
-          <div className="features">
-            <div className="feature-item">
-              <span className="feature-num">1</span>
-              <div className="feature-text">
-                <strong>Upload</strong>
-                <span>Worker records a short video of their work</span>
-              </div>
-            </div>
-            <div className="feature-item">
-              <span className="feature-num">2</span>
-              <div className="feature-text">
-                <strong>AI Assesses</strong>
-                <span>Evaluated against BS 5385 &amp; NVQ Level 2 standards in 30 seconds</span>
-              </div>
-            </div>
-            <div className="feature-item">
-              <span className="feature-num">3</span>
-              <div className="feature-text">
-                <strong>Get Certified</strong>
-                <span>Verifiable digital certificate with QR code</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="welcome-actions">
+      <div className="app landing">
+        <header>
+          <div className="header-inner">
+            <h1>SkillProof</h1>
             <button
-              className="btn-primary"
-              style={{ width: '100%' }}
-              onClick={() => setStep('worker-register')}
-            >
-              I'm a Worker &mdash; Start Assessment
-            </button>
-            <button
-              className="btn-secondary btn-gap"
-              style={{ width: '100%' }}
+              className="header-link"
               onClick={async () => {
                 setLoading(true)
                 setErr(null)
@@ -451,11 +428,74 @@ export default function App() {
               }}
               disabled={loading}
             >
-              {loading ? 'Loading...' : "I'm a Business \u2014 Set Up Assessments"}
+              For Business
             </button>
-            {err && <p className="error">{err}</p>}
           </div>
-        </main>
+        </header>
+
+        <section className="hero">
+          <div className="hero-glow" />
+          <h2 className="hero-headline">
+            Trade Certification<br />in Minutes, Not Weeks
+          </h2>
+          <p className="hero-subtitle">
+            AI-powered skill assessment for construction professionals. Upload a video. Get certified.
+          </p>
+          <button
+            className="btn-hero"
+            onClick={() => setStep('worker-register')}
+          >
+            Start Assessment &rarr;
+          </button>
+          <p className="hero-trust">
+            Used by 500+ tradespeople &middot; BS 5385 compliant &middot; 30-second AI review
+          </p>
+        </section>
+
+        <section className="how-it-works" ref={stepsRef}>
+          <p className="section-label">How it works</p>
+          <div className={`steps-grid${howVisible ? ' visible' : ''}`}>
+            <div className="step-card">
+              <span className="step-number">01</span>
+              <h3>Upload Your Work</h3>
+              <p>Record a short video demonstrating your trade skills on the assigned task.</p>
+            </div>
+            <div className="step-card">
+              <span className="step-number">02</span>
+              <h3>AI Assesses</h3>
+              <p>Evaluated against BS 5385 and NVQ Level 2 standards in under 30 seconds.</p>
+            </div>
+            <div className="step-card">
+              <span className="step-number">03</span>
+              <h3>Get Certified</h3>
+              <p>Receive a verifiable digital certificate with a unique QR code.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="trust-strip">
+          <span className="trust-pill">30s average review time</span>
+          <span className="trust-pill">97% accuracy</span>
+          <span className="trust-pill">BS 5385 &amp; NVQ Level 2</span>
+          <span className="trust-pill">Verifiable QR certificates</span>
+        </section>
+
+        <section className="final-cta">
+          <h2>Ready to prove your skills?</h2>
+          <button
+            className="btn-hero"
+            onClick={() => setStep('worker-register')}
+          >
+            Start Assessment &rarr;
+          </button>
+          <p className="final-cta-sub">No account needed. Takes 5 minutes.</p>
+        </section>
+
+        <footer className="landing-footer">
+          <p>SkillProof &copy; 2026 &middot; Built with AI</p>
+        </footer>
+
+        {err && <p className="error landing-error">{err}</p>}
       </div>
     )
   }
