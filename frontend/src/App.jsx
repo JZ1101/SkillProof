@@ -60,6 +60,7 @@ export default function App() {
   const [editTrade, setEditTrade] = useState(null)
   const [editThreshold, setEditThreshold] = useState(70)
   const [copiedTrade, setCopiedTrade] = useState(null)
+  const [orgEmail, setOrgEmail] = useState('')
   const [submissions, setSubmissions] = useState([])
   // Branded assessment
   const [brandedOrg, setBrandedOrg] = useState(null)
@@ -425,22 +426,7 @@ export default function App() {
             <h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1>
             <button
               className="header-link"
-              onClick={async () => {
-                setLoading(true)
-                setErr(null)
-                try {
-                  const o = await createOrg('Demo Company', null)
-                  setOrg(o)
-                  const data = await fetchTrades()
-                  setTrades(data.trades)
-                  setStep('org-dashboard')
-                } catch (error) {
-                  setErr(error.message)
-                } finally {
-                  setLoading(false)
-                }
-              }}
-              disabled={loading}
+              onClick={() => setStep('org-register')}
             >
               For Business
             </button>
@@ -536,6 +522,55 @@ export default function App() {
             <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required />
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Loading...' : 'Continue'}
+            </button>
+          </form>
+          {err && <p className="error">{err}</p>}
+        </main>
+      </div>
+    )
+  }
+
+  // ---- ORG REGISTER ----
+  if (step === 'org-register') {
+    return (
+      <div className="app">
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1></header>
+        <main key="org-register" className="page-enter">
+          <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back</button>
+          <h2>Set Up Your Business</h2>
+          <p className="subtitle">Create assessments for your team</p>
+          <form onSubmit={async (e) => {
+            e.preventDefault()
+            setErr(null)
+            setLoading(true)
+            try {
+              const o = await createOrg(orgName, null)
+              setOrg(o)
+              const data = await fetchTrades()
+              setTrades(data.trades)
+              setStep('org-dashboard')
+            } catch (error) {
+              setErr(error.message)
+            } finally {
+              setLoading(false)
+            }
+          }}>
+            <input
+              type="text"
+              placeholder="Company name"
+              value={orgName}
+              onChange={e => setOrgName(e.target.value)}
+              required
+            />
+            <input
+              type="email"
+              placeholder="Work email"
+              value={orgEmail}
+              onChange={e => setOrgEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Setting up...' : 'Create Business Account'}
             </button>
           </form>
           {err && <p className="error">{err}</p>}
