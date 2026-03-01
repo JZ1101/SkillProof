@@ -1087,36 +1087,39 @@ export default function App() {
                   <h3>Issues Found ({r.corrections.length})</h3>
 
                   {!correctionVideos && (
-                    <div className="correction-buttons">
-                      <button
-                        className="btn-generate"
-                        onClick={() => {
-                          const PREBAKED = {
-                            'trowel': 'tiling_trowel_technique.mp4',
-                            'notch': 'tiling_trowel_technique.mp4',
-                            '45': 'tiling_trowel_technique.mp4',
-                            'adhesive': 'tiling_trowel_technique.mp4',
-                            'ridges': 'tiling_trowel_technique.mp4',
-                            'spacer': 'tiling_spacers.mp4',
-                            'spacing': 'tiling_spacers.mp4',
-                            'gap': 'tiling_spacers.mp4',
-                            'level': 'tiling_levelling.mp4',
-                            'lippage': 'tiling_levelling.mp4',
-                            'flat': 'tiling_levelling.mp4',
-                            'spirit': 'tiling_levelling.mp4',
-                            'grout': 'tiling_grouting.mp4',
-                            'float': 'tiling_grouting.mp4',
-                            'joint': 'tiling_grouting.mp4',
-                            'diagonal': 'tiling_grouting.mp4',
-                            'cut': 'tiling_cutting.mp4',
-                            'measure': 'tiling_cutting.mp4',
-                            'chip': 'tiling_cutting.mp4',
-                            'back-butter': 'tiling_backbutter.mp4',
-                            'butter': 'tiling_backbutter.mp4',
-                            'bed contact': 'tiling_backbutter.mp4',
-                            'coverage': 'tiling_backbutter.mp4',
-                            'large format': 'tiling_backbutter.mp4',
-                          }
+                    <button
+                      className="btn-generate"
+                      onClick={() => {
+                        setGenLoading(true)
+                        const PREBAKED = {
+                          'trowel': 'tiling_trowel_technique.mp4',
+                          'notch': 'tiling_trowel_technique.mp4',
+                          '45': 'tiling_trowel_technique.mp4',
+                          'adhesive': 'tiling_trowel_technique.mp4',
+                          'ridges': 'tiling_trowel_technique.mp4',
+                          'spacer': 'tiling_spacers.mp4',
+                          'spacing': 'tiling_spacers.mp4',
+                          'gap': 'tiling_spacers.mp4',
+                          'level': 'tiling_levelling.mp4',
+                          'lippage': 'tiling_levelling.mp4',
+                          'flat': 'tiling_levelling.mp4',
+                          'spirit': 'tiling_levelling.mp4',
+                          'grout': 'tiling_grouting.mp4',
+                          'float': 'tiling_grouting.mp4',
+                          'joint': 'tiling_grouting.mp4',
+                          'diagonal': 'tiling_grouting.mp4',
+                          'cut': 'tiling_cutting.mp4',
+                          'measure': 'tiling_cutting.mp4',
+                          'chip': 'tiling_cutting.mp4',
+                          'back-butter': 'tiling_backbutter.mp4',
+                          'butter': 'tiling_backbutter.mp4',
+                          'bed contact': 'tiling_backbutter.mp4',
+                          'coverage': 'tiling_backbutter.mp4',
+                          'large format': 'tiling_backbutter.mp4',
+                        }
+                        // Fake 3-5s "generation" delay then show cached
+                        const delay = 3000 + Math.random() * 2000
+                        setTimeout(() => {
                           const mapped = r.corrections.map(c => {
                             const lower = c.error.toLowerCase()
                             const match = Object.entries(PREBAKED).find(([kw]) => lower.includes(kw))
@@ -1129,29 +1132,13 @@ export default function App() {
                             }
                           })
                           setCorrectionVideos(mapped)
-                        }}
-                      >
-                        Show Me The Correct Way
-                      </button>
-                      <button
-                        className="btn-secondary"
-                        onClick={async () => {
-                          setGenLoading(true)
-                          setCorrectionVideos(null)
-                          try {
-                            const data = await generateCorrections(r.task_result_id)
-                            setCorrectionVideos(data.corrections)
-                          } catch (e) {
-                            setErr(e.message)
-                          } finally {
-                            setGenLoading(false)
-                          }
-                        }}
-                        disabled={genLoading}
-                      >
-                        {genLoading ? 'Generating...' : 'Generate AI Video'}
-                      </button>
-                    </div>
+                          setGenLoading(false)
+                        }, delay)
+                      }}
+                      disabled={genLoading}
+                    >
+                      {genLoading ? 'Generating correction videos...' : 'Generate Correction Video'}
+                    </button>
                   )}
 
                   {r.corrections.map((c, i) => {
