@@ -51,6 +51,9 @@ export default function App() {
   // Branded assessment
   const [brandedOrg, setBrandedOrg] = useState(null)
 
+  // Animated score counter
+  const [animatedScore, setAnimatedScore] = useState(0)
+
   // Processing stage animation
   useEffect(() => {
     if (step !== 'processing') { setProcStage(0); return }
@@ -61,6 +64,23 @@ export default function App() {
     ]
     return () => timers.forEach(clearTimeout)
   }, [step])
+
+  // Score counter animation (0 → actual score, 800ms ease-out)
+  useEffect(() => {
+    if (step !== 'result' || !lastResult) return
+    setAnimatedScore(0)
+    const target = lastResult.weighted_total
+    const duration = 800
+    const start = performance.now()
+    function tick(now) {
+      const elapsed = now - start
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setAnimatedScore(Math.round(eased * target))
+      if (progress < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }, [step, lastResult])
 
   // Check URL for branded assessment link: ?org=slug&trade=tiling
   useEffect(() => {
@@ -403,34 +423,38 @@ export default function App() {
             </div>
           </div>
 
-          <button
-            className="btn-primary"
-            onClick={() => setStep('worker-register')}
-          >
-            I'm a Worker &mdash; Start Assessment
-          </button>
-          <button
-            className="btn-secondary btn-gap"
-            onClick={async () => {
-              setLoading(true)
-              setErr(null)
-              try {
-                const o = await createOrg('Demo Company', null)
-                setOrg(o)
-                const data = await fetchTrades()
-                setTrades(data.trades)
-                setStep('org-dashboard')
-              } catch (error) {
-                setErr(error.message)
-              } finally {
-                setLoading(false)
-              }
-            }}
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : "I'm a Business \u2014 Set Up Assessments"}
-          </button>
-          {err && <p className="error">{err}</p>}
+          <div className="welcome-actions">
+            <button
+              className="btn-primary"
+              style={{ width: '100%' }}
+              onClick={() => setStep('worker-register')}
+            >
+              I'm a Worker &mdash; Start Assessment
+            </button>
+            <button
+              className="btn-secondary btn-gap"
+              style={{ width: '100%' }}
+              onClick={async () => {
+                setLoading(true)
+                setErr(null)
+                try {
+                  const o = await createOrg('Demo Company', null)
+                  setOrg(o)
+                  const data = await fetchTrades()
+                  setTrades(data.trades)
+                  setStep('org-dashboard')
+                } catch (error) {
+                  setErr(error.message)
+                } finally {
+                  setLoading(false)
+                }
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : "I'm a Business \u2014 Set Up Assessments"}
+            </button>
+            {err && <p className="error">{err}</p>}
+          </div>
         </main>
       </div>
     )
@@ -505,7 +529,7 @@ export default function App() {
           <h2>Your Assessments</h2>
           <p className="subtitle">Customise templates and share assessment links with candidates.</p>
 
-          <div className="trade-cards">
+          <div className="org-trade-cards">
             {trades.map(t => (
               <div key={t.key} className="trade-card org-trade-card">
                 <h3>{t.name}</h3>
@@ -563,54 +587,56 @@ export default function App() {
             <span>%</span>
           </div>
 
-          {editingRubric.tasks.map((task, ti) => (
-            <div key={ti} className="rubric-task-card">
-              <div className="rubric-task-header">
-                <input
-                  className="rubric-task-id"
-                  value={task.id}
-                  onChange={e => updateTask(ti, 'id', e.target.value)}
-                />
-                <input
-                  className="rubric-task-title"
-                  value={task.title}
-                  onChange={e => updateTask(ti, 'title', e.target.value)}
-                />
-                <button className="btn-remove" onClick={() => removeTask(ti)}>✕</button>
-              </div>
-              <textarea
-                className="rubric-instruction"
-                value={task.instruction}
-                onChange={e => updateTask(ti, 'instruction', e.target.value)}
-                rows={2}
-              />
-              <div className="rubric-meta-row">
-                <label>Format:
-                  <input value={task.format} onChange={e => updateTask(ti, 'format', e.target.value)} />
-                </label>
-                <label>Time (min):
-                  <input type="number" value={task.time_minutes} onChange={e => updateTask(ti, 'time_minutes', Number(e.target.value))} />
-                </label>
-              </div>
-
-              {['safety', 'technique', 'result'].map(cat => (
-                <div key={cat} className="rubric-criteria-section">
-                  <h4>{cat} (weight: {task.criteria[cat]?.weight || 0})</h4>
-                  {(task.criteria[cat]?.checks || []).map((check, ci) => (
-                    <div key={ci} className="rubric-check-row">
-                      <input
-                        value={check}
-                        onChange={e => updateCheck(ti, cat, ci, e.target.value)}
-                        className="rubric-check-input"
-                      />
-                      <button className="btn-remove-sm" onClick={() => removeCheck(ti, cat, ci)}>✕</button>
-                    </div>
-                  ))}
-                  <button className="btn-add-check" onClick={() => addCheck(ti, cat)}>+ Add check</button>
+          <div className="rubric-grid">
+            {editingRubric.tasks.map((task, ti) => (
+              <div key={ti} className="rubric-task-card">
+                <div className="rubric-task-header">
+                  <input
+                    className="rubric-task-id"
+                    value={task.id}
+                    onChange={e => updateTask(ti, 'id', e.target.value)}
+                  />
+                  <input
+                    className="rubric-task-title"
+                    value={task.title}
+                    onChange={e => updateTask(ti, 'title', e.target.value)}
+                  />
+                  <button className="btn-remove" onClick={() => removeTask(ti)}>✕</button>
                 </div>
-              ))}
-            </div>
-          ))}
+                <textarea
+                  className="rubric-instruction"
+                  value={task.instruction}
+                  onChange={e => updateTask(ti, 'instruction', e.target.value)}
+                  rows={2}
+                />
+                <div className="rubric-meta-row">
+                  <label>Format:
+                    <input value={task.format} onChange={e => updateTask(ti, 'format', e.target.value)} />
+                  </label>
+                  <label>Time (min):
+                    <input type="number" value={task.time_minutes} onChange={e => updateTask(ti, 'time_minutes', Number(e.target.value))} />
+                  </label>
+                </div>
+
+                {['safety', 'technique', 'result'].map(cat => (
+                  <div key={cat} className="rubric-criteria-section">
+                    <h4>{cat} (weight: {task.criteria[cat]?.weight || 0})</h4>
+                    {(task.criteria[cat]?.checks || []).map((check, ci) => (
+                      <div key={ci} className="rubric-check-row">
+                        <input
+                          value={check}
+                          onChange={e => updateCheck(ti, cat, ci, e.target.value)}
+                          className="rubric-check-input"
+                        />
+                        <button className="btn-remove-sm" onClick={() => removeCheck(ti, cat, ci)}>✕</button>
+                      </div>
+                    ))}
+                    <button className="btn-add-check" onClick={() => addCheck(ti, cat)}>+ Add check</button>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
 
           <button className="btn-secondary btn-add-task" onClick={addTask}>
             + Add Task
@@ -672,74 +698,79 @@ export default function App() {
         </header>
         <main key="dashboard" className="page-enter">
           <h2>{tradeName}</h2>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
-            />
-          </div>
-          <p className="progress-text">{done} / {total} tasks passed</p>
-          {done > 0 && (
-            <>
-              <p className="total-score">
-                {(
-                  tasks
-                    .filter(t => results[t.id]?.passed)
-                    .reduce((sum, t) => sum + results[t.id].weighted_total, 0) /
-                  done
-                ).toFixed(1)}%
-              </p>
-              <p className="total-score-label">Average Score</p>
-            </>
-          )}
+          <div className="dashboard-grid">
+            <div className="dashboard-tasks">
+              <div className="task-list">
+                {tasks.map((t, i) => {
+                  const passed = results[t.id]?.passed
+                  const failed = results[t.id] && !results[t.id].passed
+                  const isSkipped = skipped.has(t.id)
+                  const unlocked = isUnlocked(i)
+                  let status = ''
+                  if (passed) status = 'passed'
+                  else if (failed) status = 'failed'
+                  else if (isSkipped) status = 'skipped'
+                  else if (!unlocked) status = 'locked'
 
-          <div className="task-list">
-            {tasks.map((t, i) => {
-              const passed = results[t.id]?.passed
-              const failed = results[t.id] && !results[t.id].passed
-              const isSkipped = skipped.has(t.id)
-              const unlocked = isUnlocked(i)
-              let status = ''
-              if (passed) status = 'passed'
-              else if (failed) status = 'failed'
-              else if (isSkipped) status = 'skipped'
-              else if (!unlocked) status = 'locked'
-
-              return (
+                  return (
+                    <button
+                      key={t.id}
+                      className={`task-card ${status}`}
+                      onClick={() => handleTaskClick(i)}
+                      disabled={!unlocked || passed || isSkipped}
+                    >
+                      <div className="task-header">
+                        <span className="task-id">{t.id}</span>
+                        <span className="task-title">{t.title}</span>
+                        {passed && <span className="badge pass">PASS</span>}
+                        {failed && <span className="badge fail">FAIL</span>}
+                        {isSkipped && <span className="badge skip">SKIP</span>}
+                        {!unlocked && !passed && !isSkipped && (
+                          <span className="badge lock">LOCKED</span>
+                        )}
+                      </div>
+                      <div className="task-meta">
+                        {t.format} &middot; {t.time_minutes} min
+                        {passed && ` \u00b7 ${results[t.id].weighted_total}%`}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="dashboard-sidebar">
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
+                />
+              </div>
+              <p className="progress-text">{done} / {total} tasks passed</p>
+              {done > 0 && (
+                <>
+                  <p className="total-score">
+                    {(
+                      tasks
+                        .filter(t => results[t.id]?.passed)
+                        .reduce((sum, t) => sum + results[t.id].weighted_total, 0) /
+                      done
+                    ).toFixed(1)}%
+                  </p>
+                  <p className="total-score-label">Average Score</p>
+                </>
+              )}
+              {allRequiredDone() && (
                 <button
-                  key={t.id}
-                  className={`task-card ${status}`}
-                  onClick={() => handleTaskClick(i)}
-                  disabled={!unlocked || passed || isSkipped}
+                  className="btn-primary"
+                  style={{ width: '100%' }}
+                  onClick={handleGetCert}
+                  disabled={loading}
                 >
-                  <div className="task-header">
-                    <span className="task-id">{t.id}</span>
-                    <span className="task-title">{t.title}</span>
-                    {passed && <span className="badge pass">PASS</span>}
-                    {failed && <span className="badge fail">FAIL</span>}
-                    {isSkipped && <span className="badge skip">SKIP</span>}
-                    {!unlocked && !passed && !isSkipped && (
-                      <span className="badge lock">LOCKED</span>
-                    )}
-                  </div>
-                  <div className="task-meta">
-                    {t.format} &middot; {t.time_minutes} min
-                    {passed && ` \u00b7 ${results[t.id].weighted_total}%`}
-                  </div>
+                  {loading ? 'Generating Certificate...' : 'Get Certificate'}
                 </button>
-              )
-            })}
+              )}
+            </div>
           </div>
-
-          {allRequiredDone() && (
-            <button
-              className="btn-primary"
-              onClick={handleGetCert}
-              disabled={loading}
-            >
-              {loading ? 'Generating Certificate...' : 'Get Certificate'}
-            </button>
-          )}
           {err && <p className="error">{err}</p>}
         </main>
       </div>
@@ -767,39 +798,43 @@ export default function App() {
             &larr; Back to tasks
           </button>
           <h2>{task.id}: {task.title}</h2>
-          <div className="task-info">
-            <p><strong>Format:</strong> {task.format}</p>
-            <p><strong>Time limit:</strong> {task.time_minutes} minutes</p>
-          </div>
-          <div className="instruction">
-            <p>{task.instruction}</p>
-          </div>
-
-          <form onSubmit={handleUpload}>
-            <label className="file-label">
-              <svg className="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Select photo or video
-              <input type="file" name="file" accept="image/*,video/*" required />
-            </label>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              Upload &amp; Assess
-            </button>
-          </form>
-
-          {canSkip && (
-            <div className="skip-options">
-              <button className="btn-skip" onClick={() => handleSkip(40)}>
-                Skip (40%)
-              </button>
-              <button className="btn-skip high" onClick={() => handleSkip(80)}>
-                Skip (80%)
-              </button>
+          <div className="task-grid">
+            <div className="task-instructions">
+              <div className="task-info">
+                <p><strong>Format:</strong> {task.format}</p>
+                <p><strong>Time limit:</strong> {task.time_minutes} minutes</p>
+              </div>
+              <div className="instruction">
+                <p>{task.instruction}</p>
+              </div>
+              {canSkip && (
+                <div className="skip-options">
+                  <button className="btn-skip" onClick={() => handleSkip(40)}>
+                    Skip (40%)
+                  </button>
+                  <button className="btn-skip high" onClick={() => handleSkip(80)}>
+                    Skip (80%)
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+            <div>
+              <form onSubmit={handleUpload}>
+                <label className="file-label">
+                  <svg className="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  Select photo or video
+                  <input type="file" name="file" accept="image/*,video/*" required />
+                </label>
+                <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
+                  Upload &amp; Assess
+                </button>
+              </form>
+            </div>
+          </div>
           {err && <p className="error">{err}</p>}
         </main>
       </div>
@@ -851,93 +886,98 @@ export default function App() {
         <main key="result" className="page-enter">
           <div className={`result-banner ${r.passed ? 'pass' : 'fail'}`}>
             <h2>{r.passed ? 'PASSED' : 'FAILED'}</h2>
-            <p className="result-score">{r.weighted_total}%</p>
+            <p className="result-score">{animatedScore}%</p>
           </div>
 
-          <div className="score-bars">
-            {['safety', 'technique', 'result'].map(key => (
-              <div className="score-row" key={key}>
-                <span className="score-label">{key}</span>
-                <div className="bar">
-                  <div
-                    className="bar-fill"
-                    style={{ width: `${r.scores[key]}%` }}
-                  />
-                </div>
-                <span className="score-val">{r.scores[key]}%</span>
-              </div>
-            ))}
-          </div>
-
-          {r.feedback && <p className="feedback">{r.feedback}</p>}
-          {r.fail_reason && <p className="fail-reason">{r.fail_reason}</p>}
-
-          {r.corrections && r.corrections.length > 0 && (
-            <div className="corrections">
-              <h3>Issues Found ({r.corrections.length})</h3>
-
-              {!correctionVideos && (
-                <button
-                  className="btn-generate"
-                  onClick={async () => {
-                    setGenLoading(true)
-                    setCorrectionVideos(null)
-                    try {
-                      const data = await generateCorrections(r.task_result_id)
-                      setCorrectionVideos(data.corrections)
-                    } catch (e) {
-                      setErr(e.message)
-                    } finally {
-                      setGenLoading(false)
-                    }
-                  }}
-                  disabled={genLoading}
-                >
-                  {genLoading ? 'Generating correction videos... (1-2 min)' : 'Show Me The Correct Way'}
-                </button>
-              )}
-
-              {r.corrections.map((c, i) => {
-                const cv = correctionVideos?.[i]
-                return (
-                  <div key={i} className="correction-block">
-                    <div className="correction-header">
-                      <span className="correction-num">Error {i + 1}</span>
-                      <span className={`correction-cat ${c.category}`}>{c.category}</span>
+          <div className="result-grid">
+            <div className="result-scores-col">
+              <div className="score-bars">
+                {['safety', 'technique', 'result'].map(key => (
+                  <div className="score-row" key={key}>
+                    <span className="score-label">{key}</span>
+                    <div className="bar">
+                      <div
+                        className="bar-fill"
+                        style={{ width: `${r.scores[key]}%` }}
+                      />
                     </div>
-                    <p className="correction-error">{c.error}</p>
-                    <p className="correction-explain">{c.explanation}</p>
-                    {cv && cv.skipped_reason && (
-                      <p className="correction-skip">{cv.skipped_reason}</p>
-                    )}
-                    {cv && !cv.skipped_reason && (
-                      <div className="correction-demo">
-                        {cv.video_path ? (
-                          <video controls width="100%" playsInline>
-                            <source src={`${BACKEND}/${cv.video_path}`} type="video/mp4" />
-                          </video>
-                        ) : (
-                          <p className="correction-novid">Video failed to generate</p>
+                    <span className="score-val">{r.scores[key]}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="result-feedback-col">
+              {r.feedback && <p className="feedback">{r.feedback}</p>}
+              {r.fail_reason && <p className="fail-reason">{r.fail_reason}</p>}
+
+              {r.corrections && r.corrections.length > 0 && (
+                <div className="corrections">
+                  <h3>Issues Found ({r.corrections.length})</h3>
+
+                  {!correctionVideos && (
+                    <button
+                      className="btn-generate"
+                      onClick={async () => {
+                        setGenLoading(true)
+                        setCorrectionVideos(null)
+                        try {
+                          const data = await generateCorrections(r.task_result_id)
+                          setCorrectionVideos(data.corrections)
+                        } catch (e) {
+                          setErr(e.message)
+                        } finally {
+                          setGenLoading(false)
+                        }
+                      }}
+                      disabled={genLoading}
+                    >
+                      {genLoading ? 'Generating correction videos... (1-2 min)' : 'Show Me The Correct Way'}
+                    </button>
+                  )}
+
+                  {r.corrections.map((c, i) => {
+                    const cv = correctionVideos?.[i]
+                    return (
+                      <div key={i} className="correction-block">
+                        <div className="correction-header">
+                          <span className="correction-num">Error {i + 1}</span>
+                          <span className={`correction-cat ${c.category}`}>{c.category}</span>
+                        </div>
+                        <p className="correction-error">{c.error}</p>
+                        <p className="correction-explain">{c.explanation}</p>
+                        {cv && cv.skipped_reason && (
+                          <p className="correction-skip">{cv.skipped_reason}</p>
                         )}
-                        {cv.narration_steps && cv.narration_steps.length > 0 && (
-                          <div className="narration-steps">
-                            {cv.narration_steps.map((ns, ni) => (
-                              <p key={ni} className="narration-step">
-                                <span className="step-num">&#x25CF;</span> {ns}
-                              </p>
-                            ))}
+                        {cv && !cv.skipped_reason && (
+                          <div className="correction-demo">
+                            {cv.video_path ? (
+                              <video controls width="100%" playsInline>
+                                <source src={`${BACKEND}/${cv.video_path}`} type="video/mp4" />
+                              </video>
+                            ) : (
+                              <p className="correction-novid">Video failed to generate</p>
+                            )}
+                            {cv.narration_steps && cv.narration_steps.length > 0 && (
+                              <div className="narration-steps">
+                                {cv.narration_steps.map((ns, ni) => (
+                                  <p key={ni} className="narration-step">
+                                    <span className="step-num">&#x25CF;</span> {ns}
+                                  </p>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         )}
+                        {cv && cv.video_error && (
+                          <p className="correction-novid">Error: {cv.video_error}</p>
+                        )}
                       </div>
-                    )}
-                    {cv && cv.video_error && (
-                      <p className="correction-novid">Error: {cv.video_error}</p>
-                    )}
-                  </div>
-                )
-              })}
+                    )
+                  })}
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {r.passed ? (
             allRequiredDone() ? (
@@ -976,41 +1016,45 @@ export default function App() {
       <div className="app">
         <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
         <main key="certificate" className="page-enter">
-          <h2>Certificate Issued</h2>
-          <div className="cert-card">
-            {cert.org_name && <p className="cert-org">{cert.org_name}</p>}
-            <p className="cert-name">{cert.worker_name}</p>
-            <p className="cert-trade">{cert.trade}</p>
-            <p className="cert-score">
-              Overall Score: {cert.overall_score.toFixed(1)}%
-            </p>
-            <div className="cert-scores">
-              <span>Safety: {cert.scores.safety}%</span>
-              <span>Technique: {cert.scores.technique}%</span>
-              <span>Result: {cert.scores.result}%</span>
+          <div className="certificate-wrapper">
+            <h2>Certificate Issued</h2>
+            <div className="cert-card">
+              {cert.org_name && <p className="cert-org">{cert.org_name}</p>}
+              <p className="cert-name">{cert.worker_name}</p>
+              <p className="cert-trade">{cert.trade}</p>
+              <p className="cert-score">
+                Overall Score: {cert.overall_score.toFixed(1)}%
+              </p>
+              <div className="cert-scores">
+                <span>Safety: {cert.scores.safety}%</span>
+                <span>Technique: {cert.scores.technique}%</span>
+                <span>Result: {cert.scores.result}%</span>
+              </div>
+              <p className="cert-meta">ID: {cert.cert_id}</p>
+              <p className="cert-meta">
+                Issued: {new Date(cert.issued_at).toLocaleDateString()}
+              </p>
+              {cert.org_name && (
+                <p className="cert-verified">Verified by SkillProof</p>
+              )}
             </div>
-            <p className="cert-meta">ID: {cert.cert_id}</p>
-            <p className="cert-meta">
-              Issued: {new Date(cert.issued_at).toLocaleDateString()}
-            </p>
-            {cert.org_name && (
-              <p className="cert-verified">Verified by SkillProof</p>
-            )}
+            <a
+              href={`${BACKEND}/${cert.pdf_path}`}
+              className="btn-primary"
+              style={{ width: '100%', display: 'block' }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download PDF Certificate
+            </a>
+            <button
+              className="btn-secondary"
+              style={{ width: '100%' }}
+              onClick={() => setStep('dashboard')}
+            >
+              Back to Dashboard
+            </button>
           </div>
-          <a
-            href={`${BACKEND}/${cert.pdf_path}`}
-            className="btn-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download PDF Certificate
-          </a>
-          <button
-            className="btn-secondary"
-            onClick={() => setStep('dashboard')}
-          >
-            Back to Dashboard
-          </button>
         </main>
       </div>
     )
