@@ -146,7 +146,7 @@ export default function App() {
   }
 
   function passedCount() {
-    return tasks.filter(t => results[t.id]?.passed).length
+    return tasks.filter(t => results[t.id]?.passed && !skipped.has(t.id)).length
   }
 
   function requiredCount() {
