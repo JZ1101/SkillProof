@@ -11,6 +11,7 @@ import requests
 from google import genai
 
 from .config import settings
+from .prebaked import find_prebaked
 
 CORRECTIONS_DIR = Path("corrections")
 CORRECTIONS_DIR.mkdir(exist_ok=True)
@@ -203,7 +204,7 @@ def _build_explanation(assessment: dict, task_title: str) -> list[dict]:
 
 def generate_correction_videos(
     task_id: str, task_title: str, assessment: dict, cert_id: int,
-    original_video_path: str = None,
+    original_video_path: str = None, trade: str = "",
 ) -> list[dict]:
     corrections = _build_explanation(assessment, task_title)
     if not corrections:
@@ -222,6 +223,32 @@ def generate_correction_videos(
                 "video_path": None,
                 "narration_steps": [],
                 "skipped_reason": "Basic safety/PPE requirement — no video needed" if not _needs_video(correction["error"]) else None,
+            })
+            continue
+
+        # Try pre-baked fallback first (instant)
+        prebaked = find_prebaked(trade, correction["error"])
+        if prebaked and prebaked.get("video_path"):
+            video_generated = True
+            results.append({
+                "category": correction["category"],
+                "error": correction["error"],
+                "explanation": correction["explanation"],
+                "video_path": prebaked["video_path"],
+                "narration_steps": prebaked["narration_steps"],
+                "prebaked": True,
+            })
+            continue
+        elif prebaked and prebaked.get("narration_steps"):
+            # No video file yet but we have narration
+            video_generated = True
+            results.append({
+                "category": correction["category"],
+                "error": correction["error"],
+                "explanation": correction["explanation"],
+                "video_path": None,
+                "narration_steps": prebaked["narration_steps"],
+                "prebaked": True,
             })
             continue
 

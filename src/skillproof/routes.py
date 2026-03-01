@@ -176,6 +176,7 @@ def gen_corrections(
         assessment=assessment,
         cert_id=task_result.certification_id,
         original_video_path=task_result.file_path,
+        trade=cert.trade,
     )
     return {"corrections": corrections}
 
