@@ -1,8 +1,27 @@
 import json
 from pathlib import Path
 
+import time as _time
+
 from google import genai
 from google.genai import types
+from google.genai.errors import ServerError
+
+
+def _retry_generate(client, model, contents, config, max_retries=3):
+    """Retry Gemini calls with exponential backoff on 503."""
+    for attempt in range(max_retries):
+        try:
+            return client.models.generate_content(
+                model=model, contents=contents, config=config,
+            )
+        except ServerError as e:
+            if attempt < max_retries - 1 and "503" in str(e):
+                wait = (2 ** attempt) * 5  # 5s, 10s, 20s
+                print(f"Gemini 503, retrying in {wait}s (attempt {attempt+1}/{max_retries})")
+                _time.sleep(wait)
+            else:
+                raise
 
 from .config import settings
 
@@ -81,8 +100,8 @@ def assess_video(trade: str, task_id: str, video_url: str) -> dict:
 
     client = genai.Client(api_key=settings.gemini_api_key)
 
-    response = client.models.generate_content(
-        model=settings.gemini_model,
+    response = _retry_generate(
+        client, settings.gemini_model,
         contents=[
             types.Content(
                 parts=[
@@ -128,8 +147,8 @@ def assess_file(trade: str, task_id: str, filepath: str) -> dict:
         time.sleep(2)
         uploaded = client.files.get(name=uploaded.name)
 
-    response = client.models.generate_content(
-        model=settings.gemini_model,
+    response = _retry_generate(
+        client, settings.gemini_model,
         contents=[
             types.Content(
                 parts=[
