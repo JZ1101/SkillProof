@@ -8,3 +8,4 @@ certificates/
 node_modules/
 dist/
 .DS_Store
+corrections/prebaked/*.mp4
