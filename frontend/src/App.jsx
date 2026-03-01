@@ -42,11 +42,11 @@ export default function App() {
   const [filePreview, setFilePreview] = useState(null)
   const [bgVideoIdx, setBgVideoIdx] = useState(0)
   const bgVideos = [
-    '/corrections/prebaked/tiling_trowel_technique.mp4',
-    '/corrections/prebaked/tiling_backbutter.mp4',
-    '/corrections/prebaked/tiling_grouting.mp4',
-    '/corrections/prebaked/tiling_cutting.mp4',
-    '/corrections/prebaked/tiling_levelling.mp4',
+    BACKEND + '/corrections/prebaked/tiling_trowel_technique.mp4',
+    BACKEND + '/corrections/prebaked/tiling_backbutter.mp4',
+    BACKEND + '/corrections/prebaked/tiling_grouting.mp4',
+    BACKEND + '/corrections/prebaked/tiling_cutting.mp4',
+    BACKEND + '/corrections/prebaked/tiling_levelling.mp4',
   ]
   const [howVisible, setHowVisible] = useState(false)
   const stepsRef = useRef(null)
