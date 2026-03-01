@@ -38,6 +38,7 @@ export default function App() {
   const [err, setErr] = useState(null)
   const [correctionVideos, setCorrectionVideos] = useState(null)
   const [genLoading, setGenLoading] = useState(false)
+  const [procStage, setProcStage] = useState(0)
 
   // B2B state
   const [org, setOrg] = useState(null)
@@ -46,8 +47,20 @@ export default function App() {
   const [editingRubric, setEditingRubric] = useState(null)
   const [editTrade, setEditTrade] = useState(null)
   const [editThreshold, setEditThreshold] = useState(70)
+  const [copiedTrade, setCopiedTrade] = useState(null)
   // Branded assessment
   const [brandedOrg, setBrandedOrg] = useState(null)
+
+  // Processing stage animation
+  useEffect(() => {
+    if (step !== 'processing') { setProcStage(0); return }
+    const timers = [
+      setTimeout(() => setProcStage(1), 3000),
+      setTimeout(() => setProcStage(2), 10000),
+      setTimeout(() => setProcStage(3), 20000),
+    ]
+    return () => timers.forEach(clearTimeout)
+  }, [step])
 
   // Check URL for branded assessment link: ?org=slug&trade=tiling
   useEffect(() => {
@@ -326,75 +339,111 @@ export default function App() {
     setEditingRubric(r)
   }
 
-  // ---- WELCOME ----
-  if (step === 'welcome') {
+  // ---- WELCOME (branded — worker via org link) ----
+  if (step === 'welcome' && brandedOrg) {
     return (
       <div className="app">
         <header>
-          {brandedOrg ? (
-            <div className="branded-header">
-              {brandedOrg.logo_url && <img src={brandedOrg.logo_url} alt="" className="org-logo" />}
-              <h1>{brandedOrg.name}</h1>
-              <p className="powered-by">Powered by SkillProof</p>
-            </div>
-          ) : (
-            <h1>SkillProof</h1>
-          )}
+          <div className="branded-header">
+            {brandedOrg.logo_url && <img src={brandedOrg.logo_url} alt="" className="org-logo" />}
+            <h1>{brandedOrg.name}</h1>
+            <p className="powered-by">Powered by SkillProof</p>
+          </div>
         </header>
         <main>
-          <h2>{brandedOrg
-            ? `${tradeName} Assessment`
-            : 'Get trade certified in hours, not weeks'
-          }</h2>
-          <p className="subtitle">
-            {brandedOrg
-              ? `Complete your ${tradeName.toLowerCase()} skills assessment for ${brandedOrg.name}.`
-              : 'AI-powered skill assessment for tiling and painting professionals.'
-            }
-          </p>
+          <h2>{tradeName} Assessment</h2>
+          <p className="subtitle">Complete your {tradeName.toLowerCase()} skills assessment for {brandedOrg.name}.</p>
           <form onSubmit={handleRegister}>
-            <input
-              type="text"
-              placeholder="Your full name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
+            <input type="text" placeholder="Your full name" value={name} onChange={e => setName(e.target.value)} required />
+            <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required />
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? 'Loading...' : 'Start Assessment'}
             </button>
           </form>
-          {!brandedOrg && (
-            <button
-              className="btn-secondary"
-              style={{ marginTop: '2rem' }}
-              onClick={async () => {
-                setLoading(true)
-                setErr(null)
-                try {
-                  const o = await createOrg('Demo Company', null)
-                  setOrg(o)
-                  const data = await fetchTrades()
-                  setTrades(data.trades)
-                  setStep('org-dashboard')
-                } catch (error) {
-                  setErr(error.message)
-                } finally {
-                  setLoading(false)
-                }
-              }}
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'For Businesses →'}
+          {err && <p className="error">{err}</p>}
+        </main>
+      </div>
+    )
+  }
+
+  // ---- LANDING PAGE (main entry) ----
+  if (step === 'welcome') {
+    return (
+      <div className="app">
+        <header><h1>SkillProof</h1></header>
+        <main>
+          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+            <h2 style={{ fontSize: '22px', lineHeight: 1.3 }}>Trade Certification<br/>in Minutes, Not Weeks</h2>
+            <p className="subtitle" style={{ marginBottom: '24px' }}>
+              AI-powered skill assessment for construction professionals
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '0 0 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+              <span style={{ fontSize: '24px' }}>📹</span>
+              <div><strong>Upload</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Worker records a short video of their work</span></div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+              <span style={{ fontSize: '24px' }}>🤖</span>
+              <div><strong>AI Assesses</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Evaluated against BS 5385 &amp; NVQ Level 2 standards in 30 seconds</span></div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+              <span style={{ fontSize: '24px' }}>📜</span>
+              <div><strong>Get Certified</strong><br/><span style={{ fontSize: '13px', color: '#666' }}>Verifiable digital certificate with QR code</span></div>
+            </div>
+          </div>
+
+          <button
+            className="btn-primary"
+            onClick={() => setStep('worker-register')}
+          >
+            I'm a Worker &mdash; Start Assessment
+          </button>
+          <button
+            className="btn-secondary"
+            style={{ marginTop: '10px' }}
+            onClick={async () => {
+              setLoading(true)
+              setErr(null)
+              try {
+                const o = await createOrg('Demo Company', null)
+                setOrg(o)
+                const data = await fetchTrades()
+                setTrades(data.trades)
+                setStep('org-dashboard')
+              } catch (error) {
+                setErr(error.message)
+              } finally {
+                setLoading(false)
+              }
+            }}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : "I'm a Business \u2014 Set Up Assessments"}
+          </button>
+          {err && <p className="error">{err}</p>}
+        </main>
+      </div>
+    )
+  }
+
+  // ---- WORKER REGISTER ----
+  if (step === 'worker-register') {
+    return (
+      <div className="app">
+        <header><h1>SkillProof</h1></header>
+        <main>
+          <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back</button>
+          <h2>Get Started</h2>
+          <p className="subtitle">Enter your details to begin the assessment.</p>
+          <form onSubmit={handleRegister}>
+            <input type="text" placeholder="Your full name" value={name} onChange={e => setName(e.target.value)} required />
+            <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} required />
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Loading...' : 'Continue'}
             </button>
-          )}
+          </form>
           {err && <p className="error">{err}</p>}
         </main>
       </div>
@@ -465,10 +514,11 @@ export default function App() {
                     className="btn-small btn-copy"
                     onClick={() => {
                       navigator.clipboard.writeText(assessLink(t.key))
-                      alert('Assessment link copied!')
+                      setCopiedTrade(t.key)
+                      setTimeout(() => setCopiedTrade(null), 2000)
                     }}
                   >
-                    Copy Link
+                    {copiedTrade === t.key ? '✓ Copied!' : 'Copy Link'}
                   </button>
                 </div>
                 <p className="assess-link">{assessLink(t.key)}</p>
@@ -743,6 +793,12 @@ export default function App() {
   // ---- PROCESSING ----
   if (step === 'processing') {
     const task = tasks[taskIdx]
+    const stages = [
+      { icon: '📤', text: 'Uploading video...' },
+      { icon: '👁️', text: 'AI is watching your video...' },
+      { icon: '📋', text: 'Checking against BS 5385 standards...' },
+      { icon: '✍️', text: 'Generating detailed feedback...' },
+    ]
     return (
       <div className="app">
         <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
@@ -750,9 +806,16 @@ export default function App() {
           <h2>Assessing: {task.title}</h2>
           <div className="processing">
             <div className="spinner" />
-            <p>Uploading and analysing your submission...</p>
-            <p>AI is checking safety, technique, and result quality.</p>
-            <p className="processing-note">This usually takes 20-60 seconds.</p>
+            <p style={{ fontSize: '24px', marginBottom: '8px' }}>{stages[procStage].icon}</p>
+            <p style={{ fontWeight: 600 }}>{stages[procStage].text}</p>
+            <div style={{ marginTop: '16px' }}>
+              {stages.map((s, i) => (
+                <p key={i} style={{ fontSize: '13px', color: i <= procStage ? '#333' : '#ccc', marginBottom: '4px' }}>
+                  {i < procStage ? '✓' : i === procStage ? '●' : '○'} {s.text}
+                </p>
+              ))}
+            </div>
+            <p className="processing-note" style={{ marginTop: '16px' }}>Usually takes 20-60 seconds</p>
           </div>
           {err && <p className="error">{err}</p>}
         </main>

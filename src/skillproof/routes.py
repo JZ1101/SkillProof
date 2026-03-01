@@ -284,24 +284,41 @@ def issue_certificate(
 
 @router.get("/verify/{cert_id}")
 def verify_certificate(cert_id: str, session: Session = Depends(get_session)):
+    from fastapi.responses import HTMLResponse
     cert = session.exec(
         select(Certificate).where(Certificate.cert_id == cert_id)
     ).first()
     if not cert:
         raise HTTPException(404, "Certificate not found")
-    return {
-        "cert_id": cert.cert_id,
-        "worker_name": cert.worker_name,
-        "trade": cert.trade,
-        "overall_score": cert.overall_score,
-        "scores": {
-            "safety": cert.safety_score,
-            "technique": cert.technique_score,
-            "result": cert.result_score,
-        },
-        "issued_at": cert.issued_at.isoformat(),
-        "status": cert.status,
-    }
+    html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkillProof — Certificate Verification</title>
+<style>
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;margin:0;padding:20px}}
+.card{{max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.1)}}
+.badge{{display:inline-block;background:#e8f5e9;color:#2e7d32;padding:4px 12px;border-radius:20px;font-weight:700;font-size:14px;margin-bottom:16px}}
+h1{{font-size:20px;margin:0 0 4px}}
+.trade{{color:#1565c0;font-size:16px;font-weight:600;margin-bottom:16px}}
+.scores{{display:flex;gap:12px;margin:12px 0}}
+.score-item{{flex:1;text-align:center;padding:8px;background:#f8f9fa;border-radius:8px}}
+.score-item .val{{font-size:20px;font-weight:700}}
+.score-item .label{{font-size:12px;color:#666}}
+.meta{{font-size:13px;color:#888;margin-top:16px}}
+.overall{{font-size:28px;font-weight:700;margin:8px 0}}
+</style></head><body>
+<div class="card">
+<span class="badge">✓ Verified Certificate</span>
+<h1>{cert.worker_name}</h1>
+<p class="trade">{cert.trade}</p>
+<p class="overall">{cert.overall_score:.1f}%</p>
+<div class="scores">
+<div class="score-item"><div class="val">{cert.safety_score:.0f}%</div><div class="label">Safety</div></div>
+<div class="score-item"><div class="val">{cert.technique_score:.0f}%</div><div class="label">Technique</div></div>
+<div class="score-item"><div class="val">{cert.result_score:.0f}%</div><div class="label">Result</div></div>
+</div>
+<p class="meta">Certificate ID: {cert.cert_id}<br>Issued: {cert.issued_at.strftime('%d %B %Y')}<br>Powered by SkillProof</p>
+</div></body></html>"""
+    return HTMLResponse(content=html)
 
 
 # ---- Organisation / B2B routes ----
