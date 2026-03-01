@@ -1,0 +1,215 @@
+{
+  "trade": "Wall and Floor Tiling",
+  "level": "NVQ Level 2",
+  "reference_standards": [
+    "BS 5385:1-5 (Wall and floor tiling)",
+    "BS 8000:11 (Workmanship on building sites - Wall and floor tiling)",
+    "City & Guilds 6710 Level 2 Diploma in Wall and Floor Tiling (600/8785/7)",
+    "Skills England ST0368 Wall and Floor Tiler Apprenticeship Standard"
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Tool & Material Identification",
+      "format": "photo + multiple_choice",
+      "time_minutes": 3,
+      "instruction": "Lay out 6 tiling tools, photograph them, name each. Select correct adhesive for a given substrate.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Tools laid out on clean, stable surface (not floor edge or unstable area)",
+            "No damaged or unsafe tools visible (cracked handles, exposed blades)"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Correctly identifies notched trowel (BS 5385 specifies 6mm or 10mm notch depending on tile size)",
+            "Correctly identifies manual or electric tile cutter",
+            "Correctly identifies spirit level (min 600mm for tiling work per BS 5385)",
+            "Correctly identifies tile spacers (appropriate size: 2-3mm for wall, 3-5mm for floor per BS 5385:1)",
+            "Correctly identifies grout float",
+            "Correctly identifies sponge or wash kit",
+            "Selects correct adhesive class for substrate (e.g. C2TE for wall, C2F for floor per BS EN 12004)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "All 6 tools correctly named",
+            "Correct adhesive-substrate pairing with reasoning",
+            "Correct spacer size selected for tile format"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T2",
+      "title": "Surface Preparation",
+      "format": "video_60_90s",
+      "time_minutes": 5,
+      "instruction": "Clean a wall surface, check level, mark horizontal/vertical guidelines with pencil, fix a batten if needed.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "PPE worn: safety boots visible, appropriate clothing",
+            "Work area clear of trip hazards",
+            "Dust/debris managed (brush or vacuum used)"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Surface cleaned/brushed before checking level",
+            "Spirit level used correctly (held flat against surface, bubble centred checked)",
+            "Plumb line or spirit level used to check vertical",
+            "Horizontal datum line marked clearly with pencil and level (per BS 5385:1 clause on setting out)",
+            "Vertical centre line or starting point marked",
+            "Batten fixed horizontally if applicable (level checked, secured with screws not nails for removal)",
+            "Surface defects identified (loose plaster, paint, contamination)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Guidelines are visible, straight, and level",
+            "Surface is clean and ready to receive adhesive",
+            "Batten (if used) is level and secure"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T3",
+      "title": "Cut a Tile",
+      "format": "video_60s + photo",
+      "time_minutes": 5,
+      "instruction": "Measure and cut an L-shaped tile to fit around a pipe or obstacle.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Safety glasses/goggles worn during cutting (mandatory per HSE guidance)",
+            "Dust mask worn if using electric cutter",
+            "Correct PPE for tool type (gloves if handling sharp edges)",
+            "Tile cutter used on stable surface"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Measurement taken from wall to obstacle accurately (pencil mark on tile)",
+            "Measurement transferred correctly to tile (allowing for spacer gap)",
+            "Appropriate cutting tool selected for cut type (manual scorer for straight, electric wet cutter for L-shape/curve)",
+            "Tile held firmly during cutting",
+            "Cut line followed accurately",
+            "Edges cleaned/filed if needed (no sharp projections)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Clean cut with no chips or cracks (per BS 5385 workmanship standard)",
+            "Tile fits the obstacle with appropriate gap (3-5mm for movement/grouting)",
+            "L-shape or curve is accurate to measurement",
+            "No visible damage to tile face"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T4",
+      "title": "Tile a 1m² Section",
+      "format": "timelapse_2_3min + photo",
+      "time_minutes": 15,
+      "instruction": "Apply adhesive with notched trowel, place tiles with spacers, check level, clean excess adhesive.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "PPE appropriate for adhesive handling",
+            "Work area organised (adhesive bucket, tiles, spacers accessible)",
+            "No slip/trip hazards on floor"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Adhesive mixed to correct consistency (if applicable)",
+            "Notched trowel held at ~45° angle to create even ridges (BS 5385:1 requirement)",
+            "Adhesive applied to area no larger than can be tiled within open time (~15-20 min for standard adhesive)",
+            "Back-buttering used for large format tiles (>300x300mm per BS 5385)",
+            "Tiles placed with firm, slight sliding motion to ensure full bed contact",
+            "Spacers inserted at all corners consistently",
+            "Spirit level used to check flatness across multiple tiles",
+            "Tiles adjusted while adhesive is still workable",
+            "Excess adhesive cleaned from tile face and joints before setting"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Even adhesive coverage (no hollow spots — per BS 5385:1 min 80% bed contact for walls, 95% for wet areas)",
+            "Tiles are level with each other (max 1mm lippage per BS 8000:11)",
+            "Consistent spacer gaps throughout",
+            "Pattern/bond aligned correctly",
+            "No adhesive residue on tile faces",
+            "Overall section looks professional and even"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T5",
+      "title": "Grouting & Finishing",
+      "format": "video_90s + photo",
+      "time_minutes": 10,
+      "instruction": "Mix grout, apply diagonally with float, fill all joints, clean excess with sponge within working time.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Gloves worn (grout is alkaline/irritant)",
+            "Knee pads if working on floor",
+            "Work area ventilated if using epoxy grout"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Grout mixed to correct consistency (firm paste, not runny per manufacturer spec)",
+            "Float held at ~45° angle and drawn diagonally across joints (not parallel — to avoid pulling grout out)",
+            "All joints filled in one direction first, then cross-direction",
+            "Excess grout removed with float edge held at ~90° before it sets",
+            "Damp sponge used to clean tile faces within working time (typically 15-30 min)",
+            "Sponge rinsed frequently in clean water",
+            "Final wipe to remove haze"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "All joints fully filled — no voids or pinholes (BS 5385 requirement)",
+            "Joint depth consistent (grout slightly recessed or flush, not overfilled)",
+            "Grout lines straight and even",
+            "No grout residue or haze on tile faces",
+            "Tiles not scratched during grouting",
+            "Overall finish is clean and professional"
+          ]
+        }
+      }
+    }
+  ],
+  "scoring": {
+    "weights": {
+      "safety": 0.3,
+      "technique": 0.4,
+      "result": 0.3
+    },
+    "pass_threshold": 70,
+    "safety_must_pass": true,
+    "safety_pass_threshold": 60
+  }
+}

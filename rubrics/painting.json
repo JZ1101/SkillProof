@@ -1,0 +1,216 @@
+{
+  "trade": "Painting & Decorating",
+  "level": "NVQ Level 2",
+  "reference_standards": [
+    "BS 6150 (Painting of buildings)",
+    "BS 8000:12 (Workmanship on building sites - Decorative wallcoverings and painting)",
+    "City & Guilds 6707 Level 2 Diploma in Painting and Decorating",
+    "CSCS Painter and Decorator occupational standard"
+  ],
+  "tasks": [
+    {
+      "id": "P1",
+      "title": "Surface Assessment",
+      "format": "photo + written_explanation_50_150_words",
+      "time_minutes": 3,
+      "instruction": "Photograph a wall with visible defects. Identify each defect (cracks, damp, flaking, holes). Describe correct preparation method for each.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Identifies any hazardous materials (e.g. potential lead paint on pre-1960s surfaces, asbestos textures)",
+            "Mentions appropriate PPE for preparation work (dust mask for sanding, goggles)"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "All visible defects correctly identified and named",
+            "Cracks: correctly categorised (hairline vs structural) with appropriate remedy (fill and sand for hairline, investigate cause for structural per BS 6150)",
+            "Damp: identified and correct advice given (treat cause before painting, not just paint over — BS 6150 clause on moisture)",
+            "Flaking paint: correct prep described (scrape back to firm edge, sand smooth, prime bare areas)",
+            "Holes/damaged plaster: correct filler type selected (lightweight filler for small holes, bonding plaster for large areas)",
+            "Correct primer selected for substrate (acrylic primer for new plaster, alkali-resistant primer for cement, stain block for water stains)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "All defects identified (none missed)",
+            "Preparation methods are appropriate and in correct order",
+            "Explanation is clear and demonstrates understanding of why each step matters"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P2",
+      "title": "Masking & Protection",
+      "format": "video_60s",
+      "time_minutes": 5,
+      "instruction": "Mask off a window frame, skirting board, and light switch. Lay drop sheets on floor.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Light switch: power isolated or switch plate removed safely before masking",
+            "Drop sheets laid to prevent slip hazard (secured, not loose)",
+            "No trailing tape or materials creating trip hazard"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Masking tape applied in long continuous strips (not short patches)",
+            "Tape pressed firmly to edge with finger or tool (no lifting/bubbling — prevents paint bleed)",
+            "Window frame: tape follows frame edge precisely, no gaps between tape and frame",
+            "Skirting board: tape along top edge, straight and tight",
+            "Light switch: fully covered or plate removed and edges masked",
+            "Drop sheets cover full working area including 300mm+ beyond work zone (per BS 8000:12 protection requirements)",
+            "Drop sheets secured at edges (taped or weighted)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "All surfaces requiring protection are fully masked",
+            "No gaps in tape lines",
+            "Tape lines are straight and clean",
+            "Floor fully protected",
+            "Overall preparation looks professional and thorough"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P3",
+      "title": "Cutting In",
+      "format": "video_90s + photo",
+      "time_minutes": 10,
+      "instruction": "Freehand (no tape) cut in paint along ceiling line, internal corner, and around a door frame.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Stable footing (step ladder or platform used correctly if working at height)",
+            "Paint tin/kettle held securely (not balanced precariously)",
+            "Area below protected"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Brush selection: angled cutting-in brush (50-63mm) used — correct tool for the job",
+            "Brush held correctly on narrow edge (not flat side) for control (per professional practice)",
+            "Brush loaded correctly: dipped 1/3 into paint, excess removed on kettle edge (not overloaded)",
+            "Steady hand movement along ceiling line — brush drawn in long smooth strokes, not dabbed",
+            "Consistent pressure applied throughout stroke",
+            "Internal corner: brush worked into corner without overloading",
+            "Door frame: clean line maintained around architrave edge",
+            "Paint feathered out from cut line to blend with roller area (no hard edge buildup)"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Ceiling line is straight and consistent (max 1-2mm deviation per BS 8000:12 workmanship standards)",
+            "No paint on ceiling surface",
+            "No paint on door frame/architrave",
+            "Corner line clean and consistent",
+            "Coverage even at edges — no thin spots or runs",
+            "Cut-in area blends naturally (no visible boundary where roller will meet)"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P4",
+      "title": "Roll a Wall Section",
+      "format": "video_2min + photo",
+      "time_minutes": 10,
+      "instruction": "Load roller from tray, apply paint in W-pattern across 2m² section, lay off with even vertical strokes, blend into cut-in edges.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "Paint tray on stable surface (not on top of ladder or precarious position)",
+            "Floor protection in place",
+            "No overreaching or unsafe ladder use"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Roller loaded evenly from tray — rolled back and forth on ramp to distribute paint (not just dipped and applied)",
+            "First pass: W or M pattern to distribute paint across section (per professional standard technique)",
+            "Second pass: even vertical strokes to lay off and eliminate roller marks",
+            "Consistent pressure — not pressing too hard (starving roller) or too light (drips)",
+            "Working from top to bottom of section",
+            "Maintaining a wet edge throughout (avoiding lap marks from dried edges)",
+            "Blending into cut-in edges — roller brought close but not touching ceiling/trim",
+            "Reload frequency appropriate — roller reloaded before going dry"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Even coverage across entire section — no thin spots or missed areas",
+            "No drips or runs (per BS 6150 finish quality)",
+            "Roller marks consistent direction (vertical lay-off)",
+            "Consistent sheen/finish across section",
+            "Blends seamlessly into cut-in edges",
+            "No spattering on protected surfaces"
+          ]
+        }
+      }
+    },
+    {
+      "id": "P5",
+      "title": "Final Inspection",
+      "format": "4_photos_specified_angles",
+      "time_minutes": 5,
+      "instruction": "Photograph completed wall from four positions: straight-on overall, angled with raking light, close-up of ceiling line, shot showing masking removed.",
+      "criteria": {
+        "safety": {
+          "weight": 0.3,
+          "checks": [
+            "All masking tape removed carefully (peeled at 45° angle)",
+            "Work area cleaned and tidy (brushes/rollers cleaned or disposed, drop sheets folded)",
+            "No paint contamination on non-work surfaces"
+          ]
+        },
+        "technique": {
+          "weight": 0.4,
+          "checks": [
+            "Photos taken from all four specified angles (demonstrates thorough self-inspection habit)",
+            "Raking light photo shows surface quality (reveals any roller marks, drips, or unevenness)",
+            "Close-up shows quality of cutting-in line detail",
+            "Worker demonstrates ability to self-assess finished work"
+          ]
+        },
+        "result": {
+          "weight": 0.3,
+          "checks": [
+            "Even coverage across entire wall — no patchiness or colour variation (per BS 6150 opacity requirements)",
+            "Clean lines at all edges (ceiling, skirting, door frame, window)",
+            "No visible brush or roller marks under raking light",
+            "Consistent colour and sheen across wall",
+            "Tape removed cleanly — no paint bleed under tape lines",
+            "No paint drips, runs, or sags anywhere",
+            "Area left clean and tidy — professional finish overall"
+          ]
+        }
+      }
+    }
+  ],
+  "scoring": {
+    "weights": {
+      "safety": 0.3,
+      "technique": 0.4,
+      "result": 0.3
+    },
+    "pass_threshold": 70,
+    "safety_must_pass": true,
+    "safety_pass_threshold": 60
+  }
+}
