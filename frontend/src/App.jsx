@@ -144,7 +144,9 @@ export default function App() {
   }
 
   function allRequiredDone() {
-    return tasks.every(t => results[t.id]?.passed || skipped.has(t.id))
+    const allHandled = tasks.every(t => results[t.id]?.passed || skipped.has(t.id))
+    const hasPassedTasks = tasks.some(t => results[t.id]?.passed && !skipped.has(t.id))
+    return allHandled && hasPassedTasks
   }
 
   function passedCount() {
