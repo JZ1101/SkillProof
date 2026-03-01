@@ -674,3 +674,7 @@ input:focus {
   object-fit: contain;
   display: block;
 }
+
+/* Clickable logo */
+.logo-link { cursor: pointer; }
+.logo-link:hover { opacity: 0.8; }

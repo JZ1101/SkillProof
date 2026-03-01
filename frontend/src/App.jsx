@@ -528,7 +528,7 @@ export default function App() {
   if (step === 'org-setup') {
     return (
       <div className="app">
-        <header><h1>SkillProof</h1><p className="header-sub">Business Setup</p></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1><p className="header-sub">Business Setup</p></header>
         <main key="org-setup" className="page-enter">
           <button className="btn-back" onClick={() => setStep('welcome')}>
             &larr; Back
@@ -566,7 +566,7 @@ export default function App() {
 
     return (
       <div className="app">
-        <header><h1>SkillProof</h1><p className="header-sub">{org.name}</p></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1><p className="header-sub">{org.name}</p></header>
         <main key="org-dashboard" className="page-enter">
           <button className="btn-back" onClick={() => setStep('welcome')}>&larr; Back to home</button>
           <h2>Your Assessments</h2>
@@ -610,7 +610,7 @@ export default function App() {
   if (step === 'rubric-editor' && editingRubric) {
     return (
       <div className="app">
-        <header><h1>SkillProof</h1><p className="header-sub">{org.name} — Rubric Editor</p></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>SkillProof</h1><p className="header-sub">{org.name} — Rubric Editor</p></header>
         <main key="rubric-editor" className="page-enter">
           <button className="btn-back" onClick={() => setStep('org-dashboard')}>
             &larr; Back to dashboard
@@ -910,7 +910,7 @@ export default function App() {
     ]
     return (
       <div className="app">
-        <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
         <main key="processing" className="page-enter">
           <h2>Assessing: {task.title}</h2>
           <div className="processing">
@@ -940,7 +940,7 @@ export default function App() {
     const r = lastResult
     return (
       <div className="app">
-        <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
         <main key="result" className="page-enter">
           <div className={`result-banner ${r.passed ? 'pass' : 'fail'}`}>
             <h2>{r.passed ? 'PASSED' : 'FAILED'}</h2>
@@ -1072,7 +1072,7 @@ export default function App() {
   if (step === 'certificate') {
     return (
       <div className="app">
-        <header><h1>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
+        <header><h1 className="logo-link" onClick={() => setStep('welcome')}>{brandedOrg ? brandedOrg.name : 'SkillProof'}</h1></header>
         <main key="certificate" className="page-enter">
           <div className="certificate-wrapper">
             <h2>Certificate Issued</h2>
