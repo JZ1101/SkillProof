@@ -1089,21 +1089,49 @@ export default function App() {
                   {!correctionVideos && (
                     <button
                       className="btn-generate"
-                      onClick={async () => {
-                        setGenLoading(true)
-                        setCorrectionVideos(null)
-                        try {
-                          const data = await generateCorrections(r.task_result_id)
-                          setCorrectionVideos(data.corrections)
-                        } catch (e) {
-                          setErr(e.message)
-                        } finally {
-                          setGenLoading(false)
+                      onClick={() => {
+                        // Map corrections to prebaked videos instantly
+                        const PREBAKED = {
+                          'trowel': 'tiling_trowel_technique.mp4',
+                          'notch': 'tiling_trowel_technique.mp4',
+                          '45': 'tiling_trowel_technique.mp4',
+                          'adhesive': 'tiling_trowel_technique.mp4',
+                          'ridges': 'tiling_trowel_technique.mp4',
+                          'spacer': 'tiling_spacers.mp4',
+                          'spacing': 'tiling_spacers.mp4',
+                          'gap': 'tiling_spacers.mp4',
+                          'level': 'tiling_levelling.mp4',
+                          'lippage': 'tiling_levelling.mp4',
+                          'flat': 'tiling_levelling.mp4',
+                          'spirit': 'tiling_levelling.mp4',
+                          'grout': 'tiling_grouting.mp4',
+                          'float': 'tiling_grouting.mp4',
+                          'joint': 'tiling_grouting.mp4',
+                          'diagonal': 'tiling_grouting.mp4',
+                          'cut': 'tiling_cutting.mp4',
+                          'measure': 'tiling_cutting.mp4',
+                          'chip': 'tiling_cutting.mp4',
+                          'back-butter': 'tiling_backbutter.mp4',
+                          'butter': 'tiling_backbutter.mp4',
+                          'bed contact': 'tiling_backbutter.mp4',
+                          'coverage': 'tiling_backbutter.mp4',
+                          'large format': 'tiling_backbutter.mp4',
                         }
+                        const mapped = r.corrections.map(c => {
+                          const lower = c.error.toLowerCase()
+                          const match = Object.entries(PREBAKED).find(([kw]) => lower.includes(kw))
+                          return {
+                            category: c.category,
+                            error: c.error,
+                            explanation: c.explanation,
+                            video_path: match ? `corrections/prebaked/${match[1]}` : null,
+                            narration_steps: [],
+                          }
+                        })
+                        setCorrectionVideos(mapped)
                       }}
-                      disabled={genLoading}
                     >
-                      {genLoading ? 'Generating correction videos... (1-2 min)' : 'Show Me The Correct Way'}
+                      Show Me The Correct Way
                     </button>
                   )}
 
