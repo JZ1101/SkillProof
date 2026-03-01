@@ -39,6 +39,7 @@ export default function App() {
   const [correctionVideos, setCorrectionVideos] = useState(null)
   const [genLoading, setGenLoading] = useState(false)
   const [procStage, setProcStage] = useState(0)
+  const [filePreview, setFilePreview] = useState(null)
   const [howVisible, setHowVisible] = useState(false)
   const stepsRef = useRef(null)
 
@@ -59,6 +60,7 @@ export default function App() {
   // Processing stage animation
   useEffect(() => {
     if (step !== 'processing') { setProcStage(0); return }
+    if (step !== 'task') { setFilePreview(null) }
     const timers = [
       setTimeout(() => setProcStage(1), 3000),
       setTimeout(() => setProcStage(2), 10000),
@@ -868,8 +870,23 @@ export default function App() {
                     <line x1="12" y1="3" x2="12" y2="15" />
                   </svg>
                   Select photo or video
-                  <input type="file" name="file" accept="image/*,video/*" required />
+                  <input type="file" name="file" accept="image/*,video/*" required
+                    onChange={e => {
+                      const f = e.target.files?.[0]
+                      if (f) setFilePreview({ url: URL.createObjectURL(f), type: f.type })
+                      else setFilePreview(null)
+                    }}
+                  />
                 </label>
+                {filePreview && (
+                  <div className="file-preview">
+                    {filePreview.type.startsWith('video/') ? (
+                      <video src={filePreview.url} controls playsInline className="preview-media" />
+                    ) : (
+                      <img src={filePreview.url} alt="Preview" className="preview-media" />
+                    )}
+                  </div>
+                )}
                 <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
                   Upload &amp; Assess
                 </button>
