@@ -14,6 +14,7 @@ import {
   getCustomRubric,
   saveCustomRubric,
   getOrgAssessment,
+  getOrgSubmissions,
 } from './api'
 
 const SKIPPABLE = new Set(['T1', 'T2', 'T3', 'T4', 'T5', 'P1', 'P2', 'P3', 'P4', 'P5'])
@@ -59,6 +60,7 @@ export default function App() {
   const [editTrade, setEditTrade] = useState(null)
   const [editThreshold, setEditThreshold] = useState(70)
   const [copiedTrade, setCopiedTrade] = useState(null)
+  const [submissions, setSubmissions] = useState([])
   // Branded assessment
   const [brandedOrg, setBrandedOrg] = useState(null)
 
@@ -142,7 +144,7 @@ export default function App() {
   }
 
   function allRequiredDone() {
-    return tasks.every(t => results[t.id] || skipped.has(t.id))
+    return tasks.every(t => results[t.id]?.passed || skipped.has(t.id))
   }
 
   function passedCount() {
@@ -236,15 +238,6 @@ export default function App() {
     try {
       await skipTask(certId, task.id, score)
       setSkipped(prev => new Set([...prev, task.id]))
-      setResults(prev => ({
-        ...prev,
-        [task.id]: {
-          passed: score >= 70,
-          weighted_total: score,
-          scores: { safety: score, technique: score, result: score },
-          feedback: `Skipped with default score of ${score}%`,
-        },
-      }))
       setStep('dashboard')
     } catch (error) {
       setErr(error.message)
@@ -625,6 +618,61 @@ export default function App() {
               </div>
             ))}
           </div>
+          <div style={{marginTop: '32px'}}>
+            <h2>Worker Submissions</h2>
+            <button
+              className="btn-secondary"
+              style={{marginTop: '12px', marginBottom: '16px'}}
+              onClick={async () => {
+                setLoading(true)
+                try {
+                  const data = await getOrgSubmissions(org.slug)
+                  setSubmissions(data.submissions)
+                } catch (e) { setErr(e.message) }
+                finally { setLoading(false) }
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Refresh Submissions'}
+            </button>
+
+            {submissions.length === 0 && <p className="subtitle">No submissions yet.</p>}
+
+            {submissions.map(sub => (
+              <div key={sub.cert_id} className="submission-card">
+                <div className="submission-header">
+                  <strong>{sub.worker_name}</strong>
+                  <span className="submission-meta">{sub.worker_email}</span>
+                  <span className={`badge ${sub.status === 'passed' ? 'pass' : sub.status === 'failed' ? 'fail' : 'lock'}`}>
+                    {sub.status.toUpperCase()}
+                  </span>
+                </div>
+                <p className="submission-meta">{sub.trade} &middot; {new Date(sub.created_at).toLocaleDateString()}</p>
+                <div className="submission-tasks">
+                  {sub.tasks.map(t => (
+                    <div key={t.task_id} className={`submission-task ${t.skipped ? 'skipped' : t.passed ? 'passed' : 'failed'}`}>
+                      <span className="task-id">{t.task_id}</span>
+                      {t.skipped ? (
+                        <span className="badge skip">PROOF N/A</span>
+                      ) : (
+                        <>
+                          <span className={`badge ${t.passed ? 'pass' : 'fail'}`}>
+                            {t.passed ? 'PASS' : 'FAIL'} {t.weighted_total}%
+                          </span>
+                          {t.file_path && (
+                            <a href={`http://localhost:8000/${t.file_path}`} target="_blank" rel="noopener noreferrer" className="proof-link">
+                              View Proof
+                            </a>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
           {err && <p className="error">{err}</p>}
         </main>
       </div>

@@ -94,3 +94,7 @@ export async function saveCustomRubric(slug, trade, rubric, passThreshold) {
 export async function getOrgAssessment(slug, trade) {
   return request(await fetch(`${API}/assess/${slug}/${trade}`))
 }
+
+export async function getOrgSubmissions(slug) {
+  return request(fetch(`${API}/orgs/${slug}/submissions`))
+}

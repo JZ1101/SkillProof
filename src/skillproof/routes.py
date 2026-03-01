@@ -446,3 +446,51 @@ def get_org_assessment_info(slug: str, trade: str, session: Session = Depends(ge
         "tasks": tasks,
         "pass_threshold": threshold,
     }
+
+
+@router.get("/orgs/{slug}/submissions")
+def get_org_submissions(slug: str, session: Session = Depends(get_session)):
+    """Business portal — view all worker submissions for this org."""
+    org = session.exec(select(Organisation).where(Organisation.slug == slug)).first()
+    if not org:
+        raise HTTPException(404, "Organisation not found")
+    
+    certs = session.exec(
+        select(Certification).where(Certification.org_id == org.id).order_by(Certification.created_at.desc())
+    ).all()
+    
+    submissions = []
+    for cert in certs:
+        user = session.get(User, cert.user_id)
+        task_results = session.exec(
+            select(TaskResult).where(TaskResult.certification_id == cert.id)
+        ).all()
+        
+        tasks_data = []
+        for tr in task_results:
+            assessment = json.loads(tr.assessment_json) if tr.assessment_json else {}
+            tasks_data.append({
+                "task_id": tr.task_id,
+                "passed": tr.passed,
+                "weighted_total": tr.weighted_total,
+                "scores": {
+                    "safety": tr.safety_score,
+                    "technique": tr.technique_score,
+                    "result": tr.result_score,
+                },
+                "skipped": assessment.get("skipped", False),
+                "file_path": tr.file_path,
+                "created_at": tr.created_at.isoformat(),
+            })
+        
+        submissions.append({
+            "cert_id": cert.id,
+            "worker_name": user.name if user else "Unknown",
+            "worker_email": user.email if user else "",
+            "trade": cert.trade,
+            "status": cert.status,
+            "created_at": cert.created_at.isoformat(),
+            "tasks": tasks_data,
+        })
+    
+    return {"org": {"name": org.name, "slug": org.slug}, "submissions": submissions}
