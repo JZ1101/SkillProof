@@ -453,18 +453,15 @@ export default function App() {
         </header>
 
         <section className="hero">
-          <div className="hero-anim-bg">
-            <div className="anim-grid">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className={`anim-tile tile-${i}`}>
-                  <div className="tile-inner" />
-                </div>
-              ))}
-            </div>
-            <div className="anim-trowel" />
-            <div className="anim-level" />
-          </div>
-          <div className="hero-glow" />
+          <video
+            className="hero-bg-video"
+            src={bgVideos[bgVideoIdx]}
+            autoPlay
+            muted
+            loop
+            playsInline
+            key={bgVideoIdx}
+          />
           <h2 className="hero-headline">
             Trade Certification<br />in Minutes, Not Weeks
           </h2>

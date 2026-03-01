@@ -827,3 +827,25 @@ input:focus {
   .anim-grid { grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(3, 60px); }
   .anim-tile { width: 60px; height: 60px; }
 }
+
+/* Hero background video — directly behind text */
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.08;
+  animation: vid-fade 1.5s ease-in-out;
+}
+
+@keyframes vid-fade {
+  from { opacity: 0; }
+  to   { opacity: 0.08; }
+}
+
+.hero-glow, .hero-headline, .hero-subtitle, .btn-hero, .hero-trust {
+  position: relative;
+  z-index: 2;
+}
